@@ -13,6 +13,17 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-26dp">
 
+        <SurfaceView
+            android:id="@+id/surfaceView"
+            android:layout_width="450sp"
+            android:layout_height="750sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="124dp"
+            />
+
         <Spinner
             android:id="@+id/enhancementSpinner"
             android:layout_width="108dp"
@@ -27,17 +38,8 @@
             android:prompt="@string/enhancement_prompt"
             android:spinnerMode="dropdown"
             android:background="@color/white"
+            app:cornerRadius="1000dp"
             />
-
-        <SurfaceView
-            android:id="@+id/surfaceView"
-            android:layout_width="450sp"
-            android:layout_height="750sp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="124dp" />
 
         <Button
             android:id="@+id/captureButton"

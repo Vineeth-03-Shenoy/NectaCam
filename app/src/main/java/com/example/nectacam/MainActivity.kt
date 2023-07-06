@@ -397,10 +397,68 @@ class MainActivity : AppCompatActivity() {
             enhancedPixels[i] = enhancedPixel
         }
 
-        val enhancedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        enhancedBitmap.setPixels(enhancedPixels, 0, width, 0, 0, width, height)
+        // Apply median filter for noise reduction
+        var filteredPixels = medianFilter(enhancedPixels, width, height)
 
+        val enhancedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+        enhancedBitmap.setPixels(filteredPixels, 0, width, 0, 0, width, height)
         return enhancedBitmap
+    }
+
+    private fun medianFilter(pixels: IntArray, width: Int, height: Int): IntArray {
+        val filteredPixels = IntArray(pixels.size)
+
+        for (y in 0 until height) {
+            for (x in 0 until width) {
+                val neighbors = getNeighbors(pixels, width, height, x, y)
+                val median = getMedian(neighbors)
+                filteredPixels[y * width + x] = median
+            }
+        }
+
+        return filteredPixels
+    }
+
+    private fun getNeighbors(pixels: IntArray, width: Int, height: Int, x: Int, y: Int): IntArray {
+        val neighborhoodSize = 3 // Size of the neighborhood window (7x7)
+        val neighborhoodPixels = IntArray(neighborhoodSize * neighborhoodSize)
+        var pixelIndex = 0
+
+        for (j in -1..1) {
+            for (i in -1..1) {
+                val neighborX = x + i
+                val neighborY = y + j
+
+                // Check if the neighbor pixel is within the image boundaries
+                if (neighborX >= 0 && neighborX < width && neighborY >= 0 && neighborY < height) {
+                    neighborhoodPixels[pixelIndex] = pixels[neighborY * width + neighborX]
+                } else {
+                    // If the neighbor pixel is outside the image boundaries, reflect the pixel
+                    val reflectedX = reflectCoordinate(neighborX, width)
+                    val reflectedY = reflectCoordinate(neighborY, height)
+                    neighborhoodPixels[pixelIndex] = pixels[reflectedY * width + reflectedX]
+                }
+
+                pixelIndex++
+            }
+        }
+
+        return neighborhoodPixels
+    }
+
+    private fun getMedian(neighbors: IntArray): Int {
+        neighbors.sort()
+        return neighbors[neighbors.size / 2]
+    }
+
+    private fun reflectCoordinate(coordinate: Int, size: Int): Int {
+        // Reflect the coordinate if it is outside the valid range
+        return when {
+            coordinate < 0 -> -coordinate
+            coordinate >= size -> 2 * size - coordinate - 1
+            else -> coordinate
+        }
     }
 
     private fun contrastStretching(bitmap: Bitmap): Bitmap {
