@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Necta Cam</string>
+    <string name="gallery">Gallery</string>
+    <string name="enhancement_prompt">Select an enhancement option</string>
+
+    <array name="enhancement_options">
+        <item>Histogram Equalization</item>
+        <item>Contrast Stretching</item>
+    </array>
+</resources>
